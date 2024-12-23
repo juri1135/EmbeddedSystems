@@ -1,0 +1,2 @@
+7
+push 90 push 70 push 30 pop pop push 20 push 100
