@@ -15,7 +15,12 @@ long int fibonacci(int number){
         recursionData[number]=1;
         recursion++;
     }
+    else if(number==2){
+        recursionData[number]=2;
+        recursion++;
+    }
     else{
+        recursion++;
         recursionData[number]=fibonacci(number-1)+fibonacci(number-2);
     }
     
