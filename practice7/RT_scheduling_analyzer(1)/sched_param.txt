@@ -1,0 +1,7 @@
+S
+Alice 20 9 20 1
+Bob 30 5 30 2
+Carol 40 10 40 5
+Daniel 70 4 70 3
+Erwin 90 3 90 4
+$
