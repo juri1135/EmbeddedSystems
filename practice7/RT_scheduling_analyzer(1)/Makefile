@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -lwiringPi -lm
-OBJS = rt_analyzer.o
+OBJS = rt_analyzer2.o
 TARGET = executable
 
 $(TARGET) : $(OBJS)

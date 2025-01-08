@@ -6,11 +6,12 @@
 #define MAX_TASK 100
 #define INT_MAX 0x7FFFFFFF
 
-#define INPUT_FILE_NAME "sched_param.txt"
+#define INPUT_FILE_NAME "sched_param_rc.txt"
 
 struct Task {
     char name[16];
     int ID;
+    int releaseTime;
     int period;
     int executionTime;
     int deadline;    
@@ -43,6 +44,7 @@ int readInput()
 		}
 
 		task[i].ID = i;
+        fscanf(f, "%d ", &task[i].releaseTime);
 		fscanf(f, "%d ", &task[i].period);
 		fscanf(f, "%d ", &task[i].executionTime);
 		fscanf(f, "%d ", &task[i].deadline);
@@ -53,6 +55,7 @@ int readInput()
 
 	for (i = 0; i<taskCount; i++) {
 		printf("Task %s: ", task[i].name);
+        printf("Release time = %d, ",task[i].releaseTime);
 		printf("Period = %d, ", task[i].period);
 		printf("Execution time = %d, ", task[i].executionTime);
 		printf("Deadline = %d, ", task[i].deadline);
@@ -97,20 +100,23 @@ float checkSchedulable(){
     return util;
 }
 int main(){
+    int schedule=1;
    readInput();
    //response time=ith execution time + sigma(ceil(ith response time /jth period )* jth execution time )(j has higher priority than ith task)
-   // 근데 이 response time를 재귀적으로 계산해야 함 i번 째를 계산하기 위해 i번 째가 필요하고, 이 과정에서 i가 업데이트됨
-   // 업데이트된 i번 째와 바로 직전 호출했을 때의 response time이 동일하면 재귀 종료
-   //Initialization
+   // effective deadline= min(d(a),d(b)-C(b)) (C(b): task b's execution time), b has higher priority than a's priority
+   // 근데 여기선 그냥 deadline-release time으로 계산하는듯... 
    for(int i=0; i<taskCount; i++) task[i].responseTime=task[i].executionTime;
    for(int i=0; i<taskCount; i++){
     checkResponse(i,task[i].executionTime);
-       if(task[i].responseTime>task[i].deadline) printf("Task %s might miss deadline: response time %d > deadline %d\n",task[i].name,task[i].responseTime,task[i].deadline);
+       if(task[i].responseTime>task[i].deadline-task[i].releaseTime){
+        printf("Task %s might miss deadline: response time %d > effective deadline %d\n",task[i].name,task[i].responseTime,task[i].deadline-task[i].releaseTime);
+        schedule=0;
+       }
     }
     float utilization=checkSchedulable();
     float maxutil=taskCount*(pow(2.0,(1.0/taskCount))-1);
     //utilization<= m(2^(1/m)-1) m: # of tasks
-   if(utilization>maxutil) printf("\nThe total utilization is %.6f and the task set is NOT schedulable.\n",utilization);
-   else printf("The total utilization is %.6f and the task set is schedulable.\n",utilization);
+    if(schedule==0||utilization>maxutil) printf("\nThe total utilization is %.6f and the task set is NOT schedulable.\n",utilization);
+   else printf("\nThe total utilization is %.6f and the task set is schedulable.\n",utilization);
 }
 

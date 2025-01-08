@@ -97,6 +97,7 @@ float checkSchedulable(){
     return util;
 }
 int main(){
+    int schedule=1;
    readInput();
    //response time=ith execution time + sigma(ceil(ith response time /jth period )* jth execution time )(j has higher priority than ith task)
    // 근데 이 response time를 재귀적으로 계산해야 함 i번 째를 계산하기 위해 i번 째가 필요하고, 이 과정에서 i가 업데이트됨
@@ -105,12 +106,15 @@ int main(){
    for(int i=0; i<taskCount; i++) task[i].responseTime=task[i].executionTime;
    for(int i=0; i<taskCount; i++){
     checkResponse(i,task[i].executionTime);
-       if(task[i].responseTime>task[i].deadline) printf("Task %s might miss deadline: response time %d > deadline %d\n",task[i].name,task[i].responseTime,task[i].deadline);
+       if(task[i].responseTime>task[i].deadline){
+            printf("Task %s might miss deadline: response time %d > deadline %d\n",task[i].name,task[i].responseTime,task[i].deadline);
+            schedule=0;
+       }
     }
     float utilization=checkSchedulable();
     float maxutil=taskCount*(pow(2.0,(1.0/taskCount))-1);
     //utilization<= m(2^(1/m)-1) m: # of tasks
-   if(utilization>maxutil) printf("\nThe total utilization is %.6f and the task set is NOT schedulable.\n",utilization);
+   if(schedule==0||>maxutil) printf("\nThe total utilization is %.6f and the task set is NOT schedulable.\n",utilization);
    else printf("The total utilization is %.6f and the task set is schedulable.\n",utilization);
 }
 
