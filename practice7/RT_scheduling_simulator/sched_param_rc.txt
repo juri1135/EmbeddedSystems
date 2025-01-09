@@ -1,0 +1,14 @@
+S
+Actuator_0 5 20 4 20 1
+Sensor_0 0 30 4 30 2
+Display_0 10 40 5 40 5
+Actuator_1 5 70 4 70 3
+Sensor_1 20 90 3 90 4
+Control_0 15 50 3 45 7
+Actuator_2 4 84 4 84 6
+$
+Control_1 0 25 7 25 8
+Actuator_3 0 30 8 25 10
+Sensor_2 5 40 5 35 9
+Sensor_3 0 20 5 20 11
+$
