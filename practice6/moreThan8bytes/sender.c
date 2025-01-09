@@ -45,7 +45,8 @@ int main(void)
                 perror("Bind failed");
                 return -1;
         }
-
+	int carry=0;
+        frame.can_id=0x555;
         while(1) {                
                 printf("\nEnter your text: ");
                 fgets(inputString, 128, stdin);
@@ -56,7 +57,8 @@ int main(void)
                 // You may need to use the above declared variables "packetTotal" and "lastPacketSize"
                 lastPacketSize=0;
                 packetTotal=0;
-                frame.can_id = 0x555;
+                frame.can_id+=carry;
+		carry++;
                 if(len<=8){
                         frame.can_dlc = len;
                         memcpy(frame.data, (char *)inputString, len);
@@ -69,6 +71,8 @@ int main(void)
                 else{
                         while(len>8){
                                 frame.can_dlc = 8;
+                                frame.can_id+=carry;
+                                carry++;
                                 memcpy(frame.data, (char *)inputString+(packetTotal*8), 8);
                                 if (write(socketCANDescriptor, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
                                         perror("Write failed");
@@ -79,6 +83,8 @@ int main(void)
                         }
                         if(len!=0){
                                 frame.can_dlc = len;
+                                frame.can_id+=carry;
+                                carry++;
                                 memcpy(frame.data, (char *)inputString+(packetTotal*8), len);
                                 if (write(socketCANDescriptor, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
                                         perror("Write failed");

@@ -39,14 +39,15 @@ int main(void)
                 perror("Bind failed");
                 return -1;
         }
-
+        int prev=0;
         while(1) {
                 nbytesReceived = read(socketCANDescriptor, &frame, sizeof(struct can_frame));
                 if (nbytesReceived < 0) {
                         perror("Read failed");
                         return -1;
                 }
-                
+                if(frame.can_id==prev) continue;
+                prev=frame.can_id;
                 printf("0x%03X [%d] ", frame.can_id, frame.can_dlc);                
                 memcpy(receiveMessage, (unsigned char *)(frame.data), frame.can_dlc);
                 receiveMessage[frame.can_dlc] = '\n';
